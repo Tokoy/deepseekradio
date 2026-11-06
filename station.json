@@ -1,6 +1,6 @@
 {
-  "name": "小鲸电台",
-  "nameEn": "WHALE RADIO",
+  "name": "小鲸新闻",
+  "nameEn": "WHALE NEWS",
   "description": "每天几分钟，让 DeepSeek 写的稿子，由 DeepSeek-chan 念给你听。",
   "caster": "DeepSeek-chan",
   "languages": ["zh"],

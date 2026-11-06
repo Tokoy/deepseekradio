@@ -1,4 +1,4 @@
-/* 小鲸电台 · HTML 番组播放器
+/* 小鲸新闻 · NEWS 番组播放器
  *
  * 对齐 myradio 的核心机制：
  *   - 页面只有台本 JSON + 音频 MP3，播放位置驱动字幕 / 话题 / 角色。
@@ -75,7 +75,7 @@
     $('totTime').textContent = fmt(duration);
     $('seek').max = duration;
     $('dateLabel').innerHTML = episode.date.replace(/-/g, '.') + '<br>NO.001';
-    document.title = episode.title + ' · 小鲸电台';
+    document.title = episode.title + ' · 小鲸新闻';
     $('transcriptMeta').textContent = topics.length + ' 段 ／ ' + lines.length + ' 句 ／ ' + fmt(duration);
     const c = episode.credits || {};
     $('creditsLine').innerHTML = '<b>台本</b> ' + (c.script || 'DeepSeek') +
@@ -312,6 +312,7 @@
     $('onair').classList.toggle('live', on);
     $('onair').querySelector('span').textContent = on ? 'ON AIR' : 'STANDBY';
     $('bigPlay').classList.toggle('hidden', on);   // 播放中隐藏视频式大播放按钮
+    $('liveBadge').classList.toggle('on', on);     // 播放中 LIVE 红点脉动
     $('playIcon').innerHTML = on
       ? '<path d="M3.5 2.5h3.2v11H3.5zM9.3 2.5h3.2v11H9.3z"/>'
       : '<path d="M4 2.2v11.6L13.4 8 4 2.2z"/>';
@@ -377,7 +378,7 @@
       navigator.mediaSession.metadata = new MediaMetadata({
         title: episode.title,
         artist: 'DeepSeek-chan',
-        album: '小鲸电台 · ' + episode.date,
+        album: '小鲸新闻 · ' + episode.date,
         artwork: [{ src: new URL('assets/portrait/caster.png', location.href).href, sizes: '852x852', type: 'image/png' }],
       });
       navigator.mediaSession.setActionHandler('play', play);
@@ -427,6 +428,15 @@
       $('counter').textContent = String(ti + 1).padStart(2, '0') + ' / ' + String(topics.length).padStart(2, '0');
       $('kicker').textContent = topic.kicker;
       $('topicTitle').textContent = topic.title;
+      // 配图随新闻进度切换（本地 SVG，替换同名文件即可换图）
+      const pimg = $('panelImage');
+      const imgSrc = topic.image || 'assets/news/00.svg';
+      if (pimg.getAttribute('src') !== imgSrc) {
+        pimg.src = imgSrc;
+        pimg.classList.remove('enter');
+        void pimg.offsetWidth;
+        pimg.classList.add('enter');
+      }
       document.querySelectorAll('.chap').forEach((el, i) => el.classList.toggle('active', i === ti));
       // 播放到哪条新闻，原文卡片就换成哪条（对齐官方 showCard() 的行为）
       const card = $('linkCard');
@@ -693,6 +703,87 @@
     if (href && href !== '#') window.open(href, '_blank', 'noopener');
   });
   $('linkGo').addEventListener('click', (e) => e.stopPropagation());
+
+  // ---------- 一键录制：捕获标签页（含音频）→ webm ----------
+  // 浏览器原生 getDisplayMedia + MediaRecorder，零安装、零后端；
+  // 缺点是实时录制（要等整期播完）且输出 webm，Chrome / Edge 支持最好。
+  let mediaRecorder = null, recChunks = [], recTimer = null;
+
+  function recHint(text, warn) {
+    const el = $('recHint');
+    el.textContent = text;
+    el.classList.toggle('warn', !!warn);
+  }
+
+  function recUI(on) {
+    const b = $('recordBtn');
+    b.textContent = on ? '■ 停止录制' : '● 录制本期';
+    b.classList.toggle('recording', on);
+  }
+
+  async function startRecording() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia || !window.MediaRecorder) {
+      recHint('当前浏览器不支持标签页录制，请用桌面版 Chrome / Edge。', true);
+      return;
+    }
+    let stream;
+    try {
+      stream = await navigator.mediaDevices.getDisplayMedia({
+        video: { frameRate: 30 }, audio: true, preferCurrentTab: true,
+      });
+    } catch (e) {
+      recHint('已取消录制（或授权被拒绝）。');
+      return;
+    }
+    const mime = ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm']
+      .find((m) => MediaRecorder.isTypeSupported(m));
+    if (!mime) {
+      stream.getTracks().forEach((t) => t.stop());
+      recHint('浏览器不支持 webm 录制。', true);
+      return;
+    }
+    const hasAudio = stream.getAudioTracks().length > 0;
+    recChunks = [];
+    mediaRecorder = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 6000000 });
+    mediaRecorder.ondataavailable = (e) => { if (e.data && e.data.size) recChunks.push(e.data); };
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(recChunks, { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = '小鲸新闻-' + (episode ? episode.date : 'episode') + '.webm';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+      stream.getTracks().forEach((t) => t.stop());
+      recUI(false);
+      if (recTimer) { clearInterval(recTimer); recTimer = null; }
+      recHint('已导出 ' + (blob.size / 1024 / 1024).toFixed(1) + ' MB 的 webm（' +
+        (hasAudio ? '含标签页音频' : '注意：未捕获音频') + '）。', !hasAudio);
+    };
+    // 用户点浏览器「停止共享」时也要收尾保存
+    stream.getVideoTracks()[0].addEventListener('ended', () => {
+      if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+    });
+
+    seekTo(0);
+    mediaRecorder.start(1000);
+    play();
+    recUI(true);
+    const prefix = hasAudio ? '' : '注意：未捕获标签页音频 · ';
+    if (!hasAudio) recHint('请在共享弹窗勾选「共享标签页音频」，否则导出的视频没有声音。', true);
+    recTimer = setInterval(() => {
+      recHint(prefix + '正在录制… ' + fmt(audio.currentTime) + ' / ' + fmt(duration) +
+        '（播放结束自动下载）', !hasAudio);
+    }, 1000);
+  }
+
+  $('recordBtn').addEventListener('click', () => {
+    if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+    else startRecording();
+  });
+  audio.addEventListener('ended', () => {
+    if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+  });
 
   // ---------- 启动 ----------
   (async function start() {

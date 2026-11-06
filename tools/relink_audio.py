@@ -163,7 +163,7 @@ def align(rms, step, th, dur, chars):
 def export_texts(ep, date):
     topics = ep["topics"]
     out = [
-        f"小鲸电台 · {ep['title']}",
+        f"小鲸新闻 · {ep['title']}",
         f"{date} ｜ 中文 ｜ 台本 v2（元气版）",
         f"共 {len(topics)} 段 / {sum(len(t['lines']) for t in topics)} 句",
         "",

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400">
+<defs>
+  <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#4A3A8C"/><stop offset="1" stop-color="#7A5AF8"/>
+  </linearGradient>
+  <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
+    <circle cx="2" cy="2" r="1.2" fill="rgba(255,255,255,.14)"/>
+  </pattern>
+</defs>
+<rect width="1200" height="400" fill="url(#g)"/>
+<rect width="1200" height="400" fill="url(#dots)"/>
+<circle cx="975" cy="205" r="185" fill="rgba(255,255,255,.06)"/>
+
+  <rect x="795" y="85" width="340" height="230" rx="14" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="4"/>
+  <rect x="820" y="110" width="46" height="46" rx="6" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.30)" stroke-width="2"/><rect x="882" y="110" width="46" height="46" rx="6" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.30)" stroke-width="2"/><rect x="944" y="110" width="46" height="46" rx="6" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.30)" stroke-width="2"/><rect x="1006" y="110" width="46" height="46" rx="6" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.30)" stroke-width="2"/><rect x="1068" y="110" width="46" height="46" rx="6" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.30)" stroke-width="2"/><rect x="820" y="172" width="46" height="46" rx="6" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.30)" stroke-width="2"/><rect x="882" y="172" width="46" height="46" rx="6" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.30)" stroke-width="2"/><rect x="944" y="172" width="46" height="46" rx="6" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.30)" stroke-width="2"/><rect x="1006" y="172" width="46" height="46" rx="6" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.30)" stroke-width="2"/><rect x="1068" y="172" width="46" height="46" rx="6" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.30)" stroke-width="2"/><rect x="820" y="234" width="46" height="46" rx="6" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.30)" stroke-width="2"/><rect x="882" y="234" width="46" height="46" rx="6" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.30)" stroke-width="2"/><rect x="944" y="234" width="46" height="46" rx="6" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.30)" stroke-width="2"/><rect x="1006" y="234" width="46" height="46" rx="6" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.30)" stroke-width="2"/><rect x="1068" y="234" width="46" height="46" rx="6" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.30)" stroke-width="2"/>
+<text x="56" y="192" font-family="ui-monospace,Menlo,monospace" font-size="148" font-weight="700"
+      fill="rgba(255,255,255,.92)" letter-spacing="-4">03</text>
+<rect x="60" y="222" width="62" height="5" fill="rgba(255,255,255,.75)"/>
+<text x="60" y="270" font-family="-apple-system,PingFang SC,Helvetica,sans-serif" font-size="27"
+      font-weight="600" fill="rgba(255,255,255,.90)" letter-spacing="2">DEV CONFERENCE</text>
+<text x="60" y="344" font-family="ui-monospace,Menlo,monospace" font-size="17"
+      fill="rgba(255,255,255,.55)" letter-spacing="3">WHALE NEWS  /  DAILY AI BRIEF</text>
+</svg>

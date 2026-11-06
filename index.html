@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>小鲸电台 · AI 早报</title>
+<title>小鲸新闻 · AI 早报</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%231D3B8C'/%3E%3Ctext x='16' y='21' font-size='13' font-family='monospace' font-weight='bold' fill='white' text-anchor='middle'%3EDS%3C/text%3E%3C/svg%3E">
 <style>
   :root{
@@ -110,7 +110,13 @@
     margin:16px 0 0;font-size:40px;font-weight:600;line-height:1.3;
     letter-spacing:.01em;max-width:100%;
   }
-  .facts{margin-top:24px;flex:1 1 auto !important;min-height:0;overflow-y:auto;padding-right:8px;
+  /* 随新闻进度切换的配图（本地 SVG，替换同名文件即可换图） */
+  .panel-image{
+    display:block;width:100%;height:150px;object-fit:cover;
+    margin-top:18px;border-radius:3px;border:1px solid var(--line);background:#EEF2FA;
+  }
+  .panel-image.enter{animation:panelIn .3s ease-out}
+  .facts{margin-top:22px;flex:1 1 auto !important;min-height:0;overflow-y:auto;padding-right:8px;
     display:flex;flex-direction:column}
   .facts::-webkit-scrollbar{width:5px}
   .facts::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:3px}
@@ -191,6 +197,18 @@
   #live2d canvas{display:block;width:100%;height:100%}
   #portraitFallback{position:absolute;inset:0;display:none;align-items:flex-end;justify-content:center}
   #portraitFallback img{width:88%;max-width:460px;height:auto;object-fit:contain}
+  /* 机位左上角：红色实心圆 + LIVE，播放时脉动，待机时灰 */
+  .live-badge{
+    position:absolute;left:18px;top:18px;z-index:5;
+    display:flex;align-items:center;gap:9px;
+    background:rgba(255,255,255,.92);border:1px solid var(--line-strong);
+    padding:8px 13px;border-radius:2px;
+    font:700 15px/1 var(--mono);letter-spacing:.12em;color:var(--ink-3);
+    transition:color .2s,border-color .2s;
+  }
+  .live-badge i{width:11px;height:11px;border-radius:50%;background:var(--ink-3);display:block}
+  .live-badge.on{color:var(--red);border-color:rgba(214,64,69,.45)}
+  .live-badge.on i{background:var(--red);animation:pulse 1.6s ease-in-out infinite}
   .caster-tag{
     position:absolute;left:18px;bottom:18px;z-index:4;
     background:var(--blue);color:#fff;padding:9px 13px 8px;border-radius:2px;
@@ -263,6 +281,14 @@
     text-decoration:underline;text-underline-offset:3px}
 
   .extra-sec h3{margin:16px 0 8px;font-size:12px;font-weight:600;letter-spacing:.08em;color:var(--ink-3)}
+  .rec-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 16px;
+    background:#F7F9FD;border:1px solid var(--line);border-radius:4px}
+  .rec-btn{flex:none;border:1px solid var(--red);background:var(--red);color:#fff;border-radius:3px;
+    padding:9px 16px;font-size:13px;font-weight:600;transition:opacity .15s}
+  .rec-btn:hover{opacity:.88}
+  .rec-btn.recording{background:#fff;color:var(--red)}
+  .rec-hint{font-size:12px;color:var(--ink-3);line-height:1.6;flex:1;min-width:240px}
+  .rec-hint.warn{color:var(--red)}
 
   /* ===== 画面以下：默认折叠，录屏时不出现 ===== */
   .below{max-width:1600px;margin:8px auto 8px;padding:0 12px}
@@ -353,8 +379,8 @@
     <header>
       <div class="mark">DS</div>
       <div class="brand">
-        <h1>小鲸电台</h1>
-        <p>WHALE RADIO ／ 每天的 AI 早报</p>
+        <h1>小鲸新闻</h1>
+        <p>WHALE NEWS ／ 每日 AI 早报</p>
       </div>
       <div class="onair" id="onair"><i></i><span>STANDBY</span></div>
       <div class="date" id="dateLabel">2026.11.06<br>NO.001</div>
@@ -363,9 +389,10 @@
     <nav class="chapters"><div class="chapters-inner" id="chapters"></div></nav>
 
     <div class="desk" id="panel">
-      <div class="eyebrow"><span class="bar"></span><span id="counter">00 / 00</span><span>EP.001 · HTML 番组</span></div>
+      <div class="eyebrow"><span class="bar"></span><span id="counter">00 / 00</span><span>EP.001 · NEWS 番组</span></div>
       <div class="kicker" id="kicker">正在准备</div>
       <h2 id="topicTitle">载入本期台本…</h2>
+      <img class="panel-image" id="panelImage" src="assets/news/00.svg" alt="本期新闻配图">
       <div class="facts" id="facts">
         <div class="label" id="factsLabel">KEY POINTS / 本段要点</div>
         <ul id="factsList"></ul>
@@ -380,7 +407,8 @@
       <div id="live2d"></div>
       <div id="portraitFallback"><img src="assets/portrait/caster.png" alt="DeepSeek-chan"></div>
       <div class="loading" id="loading">LOADING CASTER…</div>
-      <div class="caster-tag">DEEPSEEK-CHAN<span>主播 · Live2D Cubism 4</span></div>
+      <div class="live-badge" id="liveBadge"><i></i><span>LIVE</span></div>
+      <div class="caster-tag">WHALE-CHAN<span>主播是小鲸</span></div>
     </div>
 
     <button id="bigPlay" aria-label="播放整期">
@@ -422,6 +450,11 @@
             <em id="linkDesc"></em>
           </div>
           <a class="link-go" id="linkGo" href="#" target="_blank" rel="noopener">阅读原文 ↗</a>
+        </div>
+        <h3>录制导出</h3>
+        <div class="rec-row">
+          <button class="rec-btn" id="recordBtn">● 录制本期</button>
+          <span class="rec-hint" id="recHint">建议 F11 全屏、窗口调成 16:9、下方保持收起、鼠标移出画面；录制时保持标签页在前台，播放结束自动下载 webm。</span>
         </div>
       </div>
       <section class="news" id="news">

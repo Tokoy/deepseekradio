@@ -14,13 +14,13 @@
       "kicker": "开场",
       "title": "今日开播",
       "url": "",
-      "image": "",
+      "image": "assets/news/00.svg",
       "expression": "脸红",
       "facts": [],
       "lines": [
         {
-          "say": "观众朋友们好呀，今天是十一月六号，欢迎收听小鲸电台。",
-          "show": "观众朋友们好呀，今天是11月6号，欢迎收听小鲸电台！",
+          "say": "Deepdeep 耶！大家早上好呀，我是小鲸，今天是十一月六号，欢迎收听小鲸新闻。",
+          "show": "Deepdeep 耶！～(∠・ω< )⌒☆ 大家早上好呀，我是小鲸，今天是11月6号，欢迎收听小鲸新闻！",
           "start": 0.12,
           "end": 6.14
         },
@@ -40,7 +40,7 @@
       "kicker": "开源 · 智能体",
       "title": "DeepSeek 开源 Super-agent 研究原型",
       "url": "https://www.zhihu.com/pin/2100551711727294368",
-      "image": "",
+      "image": "assets/news/01.svg",
       "expression": "竖食指开",
       "facts": [
         "11 月 2 日，DeepSeek 开放 Super-agent 研究原型并公布架构思路，代码以 DeepSeek Harness 组件包提供，采用 MIT 许可。",
@@ -97,7 +97,7 @@
       "kicker": "大模型 · 国产算力",
       "title": "美团 LongCat-2.5：1.6 万亿参数",
       "url": "https://thinkbar.blog.csdn.net/article/details/169905182",
-      "image": "",
+      "image": "assets/news/02.svg",
       "expression": "圈圈眼",
       "facts": [
         "11 月 2 日，美团发布 LongCat-2.5，总参数 1.6 万亿，是面向长程智能体任务的原生多模态模型。",
@@ -154,7 +154,7 @@
       "kicker": "开发者大会 · 硬件",
       "title": "微软开发者大会连发 AI 新品",
       "url": "https://thinkbar.blog.csdn.net/article/details/169905182",
-      "image": "",
+      "image": "assets/news/03.svg",
       "expression": "＞＜",
       "facts": [
         "11 月 2 日，微软年度开发者大会在旧金山开幕，一口气发布首款 AI 编程模型、推理模型、AI 搜索引擎与个人助手。",
@@ -208,7 +208,7 @@
       "kicker": "标准 · 合规",
       "title": "四大厂商统一 AI 训练退出信号",
       "url": "https://www.zhihu.com/pin/2100551711727294368",
-      "image": "",
+      "image": "assets/news/04.svg",
       "expression": "屑屑眼",
       "facts": [
         "OpenAI、谷歌、微软、Anthropic 宣布共同支持统一的训练偏好信号。",
@@ -265,7 +265,7 @@
       "kicker": "工具 · 正式可用",
       "title": "谷歌 Computer Use 转入正式可用",
       "url": "https://www.zhihu.com/pin/2100551711727294368",
-      "image": "",
+      "image": "assets/news/05.svg",
       "expression": "爱心眼",
       "facts": [
         "谷歌把 Computer Use 工具推入正式可用阶段，支持两类 Gemini API。",
@@ -319,13 +319,13 @@
       "kicker": "片尾",
       "title": "明天见",
       "url": "",
-      "image": "",
+      "image": "assets/news/00.svg",
       "expression": "脸红",
       "facts": [],
       "lines": [
         {
-          "say": "今天的科技新鲜事就聊到这儿啦，谢谢收听小鲸电台，明天也要来听哦。",
-          "show": "今天的科技新鲜事就聊到这儿啦，谢谢收听小鲸电台，明天也要来听哦～",
+          "say": "今天的科技新鲜事就聊到这儿啦，谢谢收听小鲸新闻，明天也要来听哦。",
+          "show": "今天的科技新鲜事就聊到这儿啦，谢谢收听小鲸新闻，明天也要来听哦～",
           "start": 137.7,
           "end": 144.84
         },
